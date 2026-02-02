@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Just One Question 🌙</title>
+
+  <style>
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #0f172a;
+      font-family: system-ui, Arial, sans-serif;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 1.6rem;
+      margin-bottom: 25px;
+    }
+
+    .buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    button {
+      width: 260px;
+      max-width: 100%;
+      padding: 18px;
+      font-size: 1.1rem;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      font-weight: 600;
+    }
+
+    #yes {
+      background: #ec4899;
+      color: white;
+    }
+
+    #no {
+      background: #ef4444;
+      color: white;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+  <div>
+    <h1>Will you be my Valentine? 💌</h1>
+
+    <div class="buttons">
+      <button id="yes" onclick="yesClick()">YES 💖</button>
+      <button id="no" onclick="noClick()">NO</button>
+    </div>
+  </div>
+
+  <script>
+    const NO_MESSAGES = [
+      "NO 😐",
+      "Are you sure? 🥺",
+      "Think again 😭",
+      "Still NO? 💔",
+      "You like pressing this 😒",
+      "Okay wow 😔",
+      "Last chance 🫶",
+      "Final NO?"
+    ];
+
+    const MAX_NO = 8;
+
+    // Initialize storage safely
+    if (!localStorage.getItem("initialized")) {
+      localStorage.setItem("initialized", "true");
+      localStorage.setItem("noCount", "0");
+      localStorage.setItem("firstClick", "none");
+      localStorage.setItem("submitted", "false");
+    }
+
+    function noClick() {
+      if (localStorage.getItem("submitted") === "true") return;
+
+      let count = Number(localStorage.getItem("noCount")) + 1;
+      localStorage.setItem("noCount", count);
+
+      if (localStorage.getItem("firstClick") === "none") {
+        localStorage.setItem("firstClick", "no");
+      }
+
+      const noBtn = document.getElementById("no");
+      const yesBtn = document.getElementById("yes");
+
+      // Change NO text every click
+      noBtn.innerText =
+        NO_MESSAGES[Math.min(count - 1, NO_MESSAGES.length - 1)];
+
+      // Disable NO after 8 clicks
+      if (count >= MAX_NO) {
+        noBtn.innerText = "NO ❌ (disabled)";
+        noBtn.disabled = true;
+      }
+
+      // Grow YES slightly
+      const size = parseFloat(getComputedStyle(yesBtn).fontSize);
+      yesBtn.style.fontSize = size * 1.15 + "px";
+    }
+
+    function yesClick() {
+      if (localStorage.getItem("submitted") === "true") return;
+
+      if (localStorage.getItem("firstClick") === "none") {
+        localStorage.setItem("firstClick", "yes");
+      }
+
+      const first = localStorage.getItem("firstClick");
+      const noCount = localStorage.getItem("noCount");
+
+      // Send result ONCE
+      fetch(`https://api.countapi.xyz/hit/ritul-valentine/${first}-${noCount}`);
+
+      localStorage.setItem("submitted", "true");
+
+      document.body.innerHTML = `
+        <h1>You said YES 💖</h1>
+        <p style="opacity:0.9;">That’s all that mattered 🫶</p>
+      `;
+    }
+  </script>
+
+</body>
+</html>
