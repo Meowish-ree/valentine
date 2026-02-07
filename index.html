@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Just One Question 🌙</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Just One Question 🤭</title>
 
   <style>
     body {
@@ -17,75 +17,154 @@
       color: white;
       text-align: center;
       padding: 20px;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 320px;
+      width: 100%;
+    }
+
+    img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: contain;
+      border-radius: 12px;
+      margin-bottom: 20px;
     }
 
     h1 {
-      font-size: 1.6rem;
-      margin-bottom: 25px;
+      font-size: 1.5rem;
+      margin-bottom: 20px;
     }
 
     .buttons {
+      position: relative;
       display: flex;
       flex-direction: column;
       gap: 15px;
+      align-items: center;
     }
 
     button {
       width: 260px;
-      max-width: 100%;
       padding: 18px;
       font-size: 1.1rem;
       border: none;
       border-radius: 14px;
       cursor: pointer;
-      transition: all 0.25s ease;
       font-weight: 600;
+      transition: all 0.25s ease;
     }
 
     #yes {
       background: #ec4899;
       color: white;
+      z-index: 2;
     }
 
     #no {
       background: #ef4444;
       color: white;
+      z-index: 1;
     }
 
-    button:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
+    /* YES screen */
+    .final {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(135deg, #ffe4e6, #fce7f3);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
     }
+
+    .card {
+        position: relative;
+        background-color: #f5ede4; /* beige */
+        border-radius: 18px;
+        padding: 44px 32px;
+        max-width: 400px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+        line-height: 1.7;
+        font-size: 1rem;
+        color: #6b7280;
+        overflow: hidden;
+    }
+
+    .card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23f9a8d4' stroke-width='2'%3E%3Cpath d='M30 40c0-6 8-6 8 0 0 6-8 10-8 10s-8-4-8-10c0-6 8-6 8 0z'/%3E%3Cpath d='M70 30c5-5 10 0 5 5-5 5-10 10-10 10s-5-5-10-10c-5-5 0-10 5-5'/%3E%3Cpath d='M60 80c0-6 10-6 10 0 0 6-10 12-10 12s-10-6-10-12c0-6 10-6 10 0z'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 110px 110px;
+        opacity: 0.25;
+        pointer-events: none;
+    }
+
+
+    .bg-hearts {
+        position: absolute;
+        inset: 0;
+        background-color: #fff1f2;
+        background-image:
+            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23f472b6' stroke-width='2'%3E%3Cpath d='M30 40c0-6 8-6 8 0 0 6-8 10-8 10s-8-4-8-10c0-6 8-6 8 0z'/%3E%3Cpath d='M80 30c5-5 10 0 5 5-5 5-10 10-10 10s-5-5-10-10c-5-5 0-10 5-5'/%3E%3Cpath d='M60 75c0-8 12-8 12 0 0 8-12 14-12 14s-12-6-12-14c0-8 12-8 12 0z'/%3E%3C/g%3E%3C/svg%3E");
+        background-repeat: repeat;
+        background-size: 140px 140px;
+        opacity: 0.35;
+        z-index: 0;
+    }
+
   </style>
 </head>
 <body>
 
-  <div>
-    <h1>Will you be my Valentine? 💌</h1>
+  <div class="container" id="main">
+    <img id="mainImg" src="proposecat.png" alt="cat" />
+
+    <h1>Vamp, will you be my Valentine?🥰</h1>
 
     <div class="buttons">
-      <button id="yes" onclick="yesClick()">YES 💖</button>
-      <button id="no" onclick="noClick()">NO</button>
+      <button id="yes" onclick="yesClick()">YES💖</button>
+      <button id="no" onclick="noClick()">NO😒</button>
     </div>
   </div>
 
   <script>
-    const NO_MESSAGES = [
-      "NO 😐",
-      "Are you sure? 🥺",
-      "Think again 😭",
-      "Still NO? 💔",
-      "You like pressing this 😒",
-      "Okay wow 😔",
-      "Last chance 🫶",
-      "Final NO?"
+        // 🔁 DEV RESET — remove before sending
+            if (location.hostname === "localhost" || location.protocol === "file:") {
+                localStorage.clear();
+            }
+
+    const MAX_NO = 10;
+    const NO_TEXTS = [
+        "NO!?!?",
+        "WoW, seriouly!?",
+        "Come on, stop joking",
+        "Still no huh?",
+        "How abt a 2nd thought?",
+        "This hurts a little",
+        "Urghh shiii",
+        "PLEASE...?",
+        "Last chance!",
+        "Fine..."
     ];
 
-    const MAX_NO = 8;
+    const song = new Audio("song.mp3");
+    song.loop = true;
+    song.volume = 0.7;
 
-    // Initialize storage safely
-    if (!localStorage.getItem("initialized")) {
-      localStorage.setItem("initialized", "true");
+    const images = {
+      proposal: "proposecat.png",
+      gun: "guncat.png",
+      cry: "crycat.png"
+    };
+
+    if (!localStorage.getItem("init")) {
+      localStorage.setItem("init", "true");
       localStorage.setItem("noCount", "0");
       localStorage.setItem("firstClick", "none");
       localStorage.setItem("submitted", "false");
@@ -97,29 +176,41 @@
       let count = Number(localStorage.getItem("noCount")) + 1;
       localStorage.setItem("noCount", count);
 
+      document.getElementById("no").innerText =
+      NO_TEXTS[Math.min(count - 1, NO_TEXTS.length - 1)];
+
+
       if (localStorage.getItem("firstClick") === "none") {
         localStorage.setItem("firstClick", "no");
       }
 
-      const noBtn = document.getElementById("no");
       const yesBtn = document.getElementById("yes");
+      const noBtn = document.getElementById("no");
+      const img = document.getElementById("mainImg");
 
-      // Change NO text every click
-      noBtn.innerText =
-        NO_MESSAGES[Math.min(count - 1, NO_MESSAGES.length - 1)];
+      // YES grows every NO
+      let size = parseFloat(getComputedStyle(yesBtn).fontSize);
+      yesBtn.style.fontSize = size * 1.15 + "px";
 
-      // Disable NO after 8 clicks
-      if (count >= MAX_NO) {
-        noBtn.innerText = "NO ❌ (disabled)";
-        noBtn.disabled = true;
+      // Image switching
+      if (count <= 5) {
+        img.src = images.gun;
+      } else {
+        img.src = images.cry;
       }
 
-      // Grow YES slightly
-      const size = parseFloat(getComputedStyle(yesBtn).fontSize);
-      yesBtn.style.fontSize = size * 1.15 + "px";
+      // On 10th NO, hide NO behind YES
+      if (count >= MAX_NO) {
+        noBtn.style.opacity = "0";
+        noBtn.style.pointerEvents = "none";
+        noBtn.style.position = "absolute";
+      }
     }
 
     function yesClick() {
+
+      song.play();
+
       if (localStorage.getItem("submitted") === "true") return;
 
       if (localStorage.getItem("firstClick") === "none") {
@@ -129,14 +220,30 @@
       const first = localStorage.getItem("firstClick");
       const noCount = localStorage.getItem("noCount");
 
-      // Send result ONCE
       fetch(`https://api.countapi.xyz/hit/ritul-valentine/${first}-${noCount}`);
-
       localStorage.setItem("submitted", "true");
 
       document.body.innerHTML = `
-        <h1>You said YES 💖</h1>
-        <p style="opacity:0.9;">That’s all that mattered 🫶</p>
+        <div class="final">
+          <div class="bg-hearts"></div>
+          <div class="card">
+            <p>
+              Hahaha idk if ts cringe, idk if you like me(probably no)<br/>
+              No shi ion even know if I wnt a rs for now, bt wot ik is...<br/><br/>
+              I don't want to love you in a rushed way,<br/>
+              I want to know you, learn you.<br/>
+              How you spend your free time,<br/>
+              What do you like with your tea,<br/>
+              What made you cry as a child,<br/>
+              When and what makes you feel heavy,<br/>
+              I want to know every version of you,<br/>
+              the soft, the messy, the dark, the angry.<br/>
+              Not to change you, but to SEE you fully, and<br/>
+              LOVE YOU anyway!<br/><br/>
+              That's all, love. now lmk whatcha thinking hehehe mwah<3
+            </p>
+          </div>
+        </div>
       `;
     }
   </script>
